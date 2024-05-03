@@ -6,7 +6,7 @@ import { useState } from "react";
 
 const StyledAppLayout = styled.div`
     display: grid;
-    grid-template-columns: ${(props) => props.width} 1fr;
+    grid-template-columns: 26rem 1fr;
     transition: grid-template-columns 0.3s ease;
     grid-template-rows: auto 1fr;
     height: 100vh;
@@ -29,7 +29,7 @@ function AppLayout(){
     return(
         <StyledAppLayout width = {collapse}>
             <Header/>
-            <Sidebar collapse = {collapse} callBack = {Update} />
+            <Sidebar />
                 <Main>
                 <Outlet/>
                     

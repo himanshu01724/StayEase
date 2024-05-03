@@ -1,7 +1,8 @@
 import styled from "styled-components"
 import Logo from './Logo'
 import MainNav from './MainNav'
-
+import { getCabins } from "../services/apiCabins"
+import { useEffect } from "react"
 
 const SideBar = styled.aside`
     background-color: var(--color-grey-0);
@@ -11,43 +12,26 @@ const SideBar = styled.aside`
     display: flex;
     flex-direction: column;
     gap:3.6rem;
-    position: relative;
+    
     
     
 `
 
-const ButtonPosition = styled.button`
-top:70%;
-position: absolute;
-right: ${props => props.sidebarWidth === 0 ? '0' : '-0.1rem'};
-transition: right 0.3 ease;
-border: none;
-background-color: inherit;
 
-&:focus{
-    border: none;
-    outline: none;
-}
-
-`
 
 function Sidebar({collapse, callBack}){
 
-    function ToggleClick(){
-        if(collapse === '26rem'){
-            console.log('first interaction')
-            callBack('13rem')
-        }
-        else{
-            callBack('26rem')
-        }
-    }
+    // useEffect( ()=>{
+    // getCabins().then((data) => console.log(data))
+    // },[])
+    
+
+    
 
     return(
         <SideBar>
             <Logo/>
             <MainNav/>
-            <ButtonPosition sidebarWidth = {collapse} onClick={() => ToggleClick()}>{collapse == '26rem' ? '>':'<'}</ButtonPosition>
         </SideBar>
     )
 }
