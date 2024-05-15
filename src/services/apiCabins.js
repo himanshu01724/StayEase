@@ -1,29 +1,36 @@
-import supabase from './supabase'
+import supabase from "./supabase";
 
-export async function getCabins(){
+export async function getCabins() {
+  let { data, error } = await supabase.from("cabins").select("*");
+  if (error) {
+    console.log(error);
+    throw new Error(`Error loading data from cabins`);
+  }
 
-let { data, error } = await supabase.from('cabins').select('*')
-    if(error){
-        console.log(error)
-        throw new Error(`Error loading data from cabins`)
-    }
-
-    return data
+  return data;
 }
 
+export async function deleteCabin(id) {
+  const { error } = await supabase.from("cabins").delete().eq("id", id);
 
-export async function deleteCabin(id){
+  if (error) {
+    console.log(error);
+    throw new Error(`Error loading data from cabins`);
+  }
 
-    const { error } = await supabase
-    .from('cabins')
-    .delete()
-    .eq('id', id)
+  return true;
+}
 
-    if(error){
-        console.log(error)
-        throw new Error(`Error loading data from cabins`)
-    }
+export async function addCabin(newCabin) {
+  const { data, error } = await supabase
+    .from("cabins")
+    .insert([newCabin])
+    .select();
 
-    return true
-  
+  if (error) {
+    console.log(error);
+    throw new Error(`Error adding cabin to the database`);
+  }
+
+  return true;
 }
