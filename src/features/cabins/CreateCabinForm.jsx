@@ -44,7 +44,7 @@ const Error = styled.span`
   color: var(--color-red-700);
 `;
 
-function CreateCabinForm({ editCabins = {} }) {
+function CreateCabinForm({ editCabins = {}, onClose }) {
   //custom hooks
   const { mutate, isLoading } = useCreateCabin();
   const { editCabin, isEditLoading } = useEditCabin();
@@ -75,6 +75,7 @@ function CreateCabinForm({ editCabins = {} }) {
         {
           onSuccess: (data) => {
             reset();
+            onClose;
           },
         }
       );
@@ -86,7 +87,10 @@ function CreateCabinForm({ editCabins = {} }) {
   }
 
   return (
-    <Form onSubmit={handleSubmit(formData, onError)}>
+    <Form
+      onSubmit={handleSubmit(formData, onError)}
+      type={onClose ? "modal" : "regular"}
+    >
       <FormRow>
         <Label htmlFor="name">Cabin name</Label>
         <Input
@@ -171,7 +175,7 @@ function CreateCabinForm({ editCabins = {} }) {
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button variation="secondary" type="reset">
+        <Button variation="secondary" type="reset" onClick={() => onClose?.()}>
           Cancel
         </Button>
         <Button variation="primary" disabled={isWorking}>
