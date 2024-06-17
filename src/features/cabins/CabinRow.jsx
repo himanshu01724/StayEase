@@ -6,18 +6,21 @@ import CreateCabinForm from "./CreateCabinForm";
 import { HiSquare2Stack } from "react-icons/hi2";
 import { HiPencil, HiTrash } from "react-icons/hi";
 import { useCreateCabin } from "./useCreateCabin";
-const TableRow = styled.div`
-  display: grid;
-  grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
-  column-gap: 2.4rem;
-  align-items: center;
-  padding: 1.4rem 2.4rem;
+import Modal from "../../ui/Modal";
+import ConfirmDelete from "../../ui/ConfirmDelete";
+import Table from "../../ui/Table";
 
-  &:not(:last-child) {
-    border-bottom: 1px solid var(--color-grey-100);
-  }
-`;
+// const TableRow = styled.div`
+//   display: grid;
+//   grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
+//   column-gap: 2.4rem;
+//   align-items: center;
+//   padding: 1.4rem 2.4rem;
 
+//   &:not(:last-child) {
+//     border-bottom: 1px solid var(--color-grey-100);
+//   }
+// `;
 const Img = styled.img`
   display: block;
   width: 6.4rem;
@@ -49,8 +52,6 @@ function CabinRow({ cabins }) {
   const { id, name, image, discount, regularPrice, maxCapacity, discription } =
     cabins;
 
-  const [showForm, setShowForm] = useState(false);
-
   const { isLoading, mutate } = useDeleteCabin();
   const { mutate: createCabin, isLoading: loadingCreateCabin } =
     useCreateCabin();
@@ -67,31 +68,42 @@ function CabinRow({ cabins }) {
   }
 
   return (
-    <>
-      <TableRow role="row">
-        <Img src={image} />
-        <Cabin>{name}</Cabin>
-        <div>Fits up to {maxCapacity} guests</div>
+    <Table.Row role="row">
+      <Img src={image} />
+      <Cabin>{name}</Cabin>
+      <div>Fits up to {maxCapacity} guests</div>
 
-        <Price>{formatCurrency(regularPrice)}</Price>
-        {discount ? <Discount>{formatCurrency(discount)}</Discount> : "-"}
-        <div>
-          <button
-            onClick={() => handleDuplicate()}
-            disabled={loadingCreateCabin}
-          >
-            <HiSquare2Stack />
-          </button>
-          <button onClick={() => setShowForm(!showForm)}>
-            <HiPencil />
-          </button>
-          <button onClick={() => mutate(id)} disabled={isLoading}>
-            <HiTrash />
-          </button>
-        </div>
-      </TableRow>
-      {showForm && <CreateCabinForm editCabins={cabins} />}
-    </>
+      <Price>{formatCurrency(regularPrice)}</Price>
+      {discount ? <Discount>{formatCurrency(discount)}</Discount> : "-"}
+      <div>
+        <button onClick={() => handleDuplicate()} disabled={loadingCreateCabin}>
+          <HiSquare2Stack />
+        </button>
+        <Modal>
+          <Modal.Open opens="edit-cabin">
+            <button>
+              <HiPencil />
+            </button>
+          </Modal.Open>
+          <Modal.Window name="edit-cabin">
+            <CreateCabinForm editCabins={cabins} />
+          </Modal.Window>
+
+          <Modal.Open opens="delete">
+            <button>
+              <HiTrash />
+            </button>
+          </Modal.Open>
+          <Modal.Window name="delete">
+            <ConfirmDelete
+              resourceName="cabins"
+              disabled={isLoading}
+              onConfirm={() => mutate(id)}
+            />
+          </Modal.Window>
+        </Modal>
+      </div>
+    </Table.Row>
   );
 }
 export default CabinRow;

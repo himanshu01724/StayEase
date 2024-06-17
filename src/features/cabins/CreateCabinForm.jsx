@@ -50,7 +50,6 @@ function CreateCabinForm({ editCabins = {}, onClose }) {
   const { editCabin, isEditLoading } = useEditCabin();
 
   const { id: editId, ...editValues } = editCabins;
-  console.log(editId);
   const isEditSession = Boolean(editId);
 
   const { register, handleSubmit, reset, getValues, formState } = useForm({
@@ -175,7 +174,7 @@ function CreateCabinForm({ editCabins = {}, onClose }) {
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button variation="secondary" type="reset" onClick={() => onClose?.()}>
+        <Button variation="secondary" type="reset" onClick={onClose?.()}>
           Cancel
         </Button>
         <Button variation="primary" disabled={isWorking}>
